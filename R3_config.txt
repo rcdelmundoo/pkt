@@ -1,0 +1,57 @@
+! =====================================
+! R3 Router Configuration
+! LAN: 192.168.1.160/29 (4 hosts)
+! WAN1: 192.168.1.176/30 (R2-R3 link)
+! WAN2: 192.168.1.180/30 (R3-R4 link)
+! =====================================
+
+enable
+configure terminal
+hostname R3
+
+! Configure LAN interface (4 hosts)
+interface FastEthernet0/0
+ip address 192.168.1.161 255.255.255.248
+description "LAN3 - 4 hosts"
+no shutdown
+exit
+
+! Configure WAN interface to R2
+interface Serial0/0/0
+ip address 192.168.1.178 255.255.255.252
+description "WAN Link to R2"
+no shutdown
+exit
+
+! Configure WAN interface to R4
+interface Serial0/0/1
+ip address 192.168.1.181 255.255.255.252
+description "WAN Link to R4"
+clock rate 64000
+no shutdown
+exit
+
+! Static routes to all remote networks
+! Route to R1 LAN (64 hosts)
+ip route 192.168.1.0 255.255.255.128 192.168.1.177
+
+! Route to R2 LAN (18 hosts)
+ip route 192.168.1.128 255.255.255.224 192.168.1.177
+
+! Route to R1-R2 WAN link
+ip route 192.168.1.172 255.255.255.252 192.168.1.177
+
+! Route to R4 LAN (2 hosts)
+ip route 192.168.1.168 255.255.255.252 192.168.1.182
+
+! Enable CDP for troubleshooting
+cdp run
+
+! Save configuration
+exit
+copy running-config startup-config
+
+! =====================================
+! Configuration Complete
+! Test with: ping 192.168.1.130 (PC2)
+! =====================================

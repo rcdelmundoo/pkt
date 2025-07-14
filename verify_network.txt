@@ -1,0 +1,143 @@
+=====================================
+Network Verification Commands
+=====================================
+
+=== ROUTER VERIFICATION COMMANDS ===
+
+1. Check Interface Status (Run on each router):
+----------------------------------------------
+show ip interface brief
+! Should show all interfaces up/up
+
+2. Check Routing Table (Run on each router):
+--------------------------------------------
+show ip route
+! Should show:
+! C - Connected networks (local interfaces)
+! S - Static routes to remote networks
+
+3. Check Interface Details:
+--------------------------
+show ip interface [interface]
+! Example: show ip interface fa0/0
+
+4. Check CDP Neighbors:
+----------------------
+show cdp neighbors
+! Shows directly connected Cisco devices
+
+5. Test Connectivity from Routers:
+----------------------------------
+
+From R1:
+ping 192.168.1.174  ! R2 Serial interface
+ping 192.168.1.129  ! R2 LAN
+ping 192.168.1.161  ! R3 LAN  
+ping 192.168.1.169  ! R4 LAN
+
+From R2:
+ping 192.168.1.173  ! R1 Serial interface
+ping 192.168.1.178  ! R3 Serial interface
+ping 192.168.1.1    ! R1 LAN
+ping 192.168.1.161  ! R3 LAN
+ping 192.168.1.169  ! R4 LAN
+
+From R3:
+ping 192.168.1.177  ! R2 Serial interface
+ping 192.168.1.182  ! R4 Serial interface
+ping 192.168.1.1    ! R1 LAN
+ping 192.168.1.129  ! R2 LAN
+ping 192.168.1.169  ! R4 LAN
+
+From R4:
+ping 192.168.1.181  ! R3 Serial interface
+ping 192.168.1.1    ! R1 LAN
+ping 192.168.1.129  ! R2 LAN
+ping 192.168.1.161  ! R3 LAN
+
+=== PC VERIFICATION COMMANDS ===
+
+6. PC IP Configuration Check:
+-----------------------------
+ipconfig
+! Should show correct IP, subnet mask, gateway
+
+7. Gateway Connectivity Test:
+----------------------------
+PC1: ping 192.168.1.1
+PC2: ping 192.168.1.129
+PC3: ping 192.168.1.161
+PC4: ping 192.168.1.169
+
+8. Cross-Network Connectivity Test:
+----------------------------------
+! From PC1 (192.168.1.2):
+ping 192.168.1.130  ! PC2
+ping 192.168.1.162  ! PC3
+ping 192.168.1.170  ! PC4
+
+! From PC2 (192.168.1.130):
+ping 192.168.1.2    ! PC1
+ping 192.168.1.162  ! PC3
+ping 192.168.1.170  ! PC4
+
+! From PC3 (192.168.1.162):
+ping 192.168.1.2    ! PC1
+ping 192.168.1.130  ! PC2
+ping 192.168.1.170  ! PC4
+
+! From PC4 (192.168.1.170):
+ping 192.168.1.2    ! PC1
+ping 192.168.1.130  ! PC2
+ping 192.168.1.162  ! PC3
+
+9. Traceroute Test (from PCs):
+-----------------------------
+! From PC1 to PC4:
+tracert 192.168.1.170
+! Should show: PC1 → R1 → R2 → R3 → R4 → PC4
+
+! From PC4 to PC1:
+tracert 192.168.1.2
+! Should show: PC4 → R4 → R3 → R2 → R1 → PC1
+
+=== TROUBLESHOOTING COMMANDS ===
+
+10. If connectivity fails:
+--------------------------
+
+A) Check interface status:
+show ip interface brief
+! Look for down/down interfaces
+
+B) Check routing table:
+show ip route
+! Verify static routes exist
+
+C) Check serial interfaces:
+show controllers serial 0/0/0
+! Check for DCE/DTE and clock rate
+
+D) Debug routing (use carefully):
+debug ip packet
+! Shows packet forwarding (turn off with: undebug all)
+
+E) Check for typos in configuration:
+show running-config
+! Review interface IPs and static routes
+
+=== EXPECTED RESULTS ===
+
+✓ All interfaces should be up/up
+✓ Each router should have routes to all remote networks
+✓ All PCs should ping their default gateway
+✓ All PCs should ping all other PCs
+✓ Traceroute should show proper path through routers
+
+=== COMMON ISSUES ===
+
+❌ Serial interface down: Check clock rate on DCE side
+❌ No route to destination: Check static route configuration
+❌ PC can't ping gateway: Check PC IP configuration
+❌ Ping timeout: Check for typos in IP addresses
+❌ Partial connectivity: Verify all static routes are configured

@@ -1,0 +1,51 @@
+! =====================================
+! R4 Router Configuration
+! LAN: 192.168.1.168/30 (2 hosts)
+! WAN: 192.168.1.180/30 (R3-R4 link)
+! =====================================
+
+enable
+configure terminal
+hostname R4
+
+! Configure LAN interface (2 hosts)
+interface FastEthernet0/0
+ip address 192.168.1.169 255.255.255.252
+description "LAN4 - 2 hosts"
+no shutdown
+exit
+
+! Configure WAN interface to R3
+interface Serial0/0/0
+ip address 192.168.1.182 255.255.255.252
+description "WAN Link to R3"
+no shutdown
+exit
+
+! Static routes to all remote networks
+! Route to R1 LAN (64 hosts)
+ip route 192.168.1.0 255.255.255.128 192.168.1.181
+
+! Route to R2 LAN (18 hosts)
+ip route 192.168.1.128 255.255.255.224 192.168.1.181
+
+! Route to R3 LAN (4 hosts)
+ip route 192.168.1.160 255.255.255.248 192.168.1.181
+
+! Route to R1-R2 WAN link
+ip route 192.168.1.172 255.255.255.252 192.168.1.181
+
+! Route to R2-R3 WAN link
+ip route 192.168.1.176 255.255.255.252 192.168.1.181
+
+! Enable CDP for troubleshooting
+cdp run
+
+! Save configuration
+exit
+copy running-config startup-config
+
+! =====================================
+! Configuration Complete
+! Test with: ping 192.168.1.2 (PC1)
+! =====================================

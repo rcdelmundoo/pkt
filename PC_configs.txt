@@ -1,0 +1,87 @@
+=====================================
+PC IP Configuration Settings
+=====================================
+
+PC1 (Connected to R1 LAN)
+--------------------------
+IP Address: 192.168.1.2
+Subnet Mask: 255.255.255.128
+Default Gateway: 192.168.1.1
+DNS Server: (optional) 8.8.8.8
+
+Available IP Range for PC1 LAN: 192.168.1.1 - 192.168.1.126
+Other devices can use: .3, .4, .5, ... .126
+
+PC2 (Connected to R2 LAN)
+--------------------------
+IP Address: 192.168.1.130
+Subnet Mask: 255.255.255.224
+Default Gateway: 192.168.1.129
+DNS Server: (optional) 8.8.8.8
+
+Available IP Range for PC2 LAN: 192.168.1.129 - 192.168.1.158
+Other devices can use: .131, .132, .133, ... .158
+
+PC3 (Connected to R3 LAN)
+--------------------------
+IP Address: 192.168.1.162
+Subnet Mask: 255.255.255.248
+Default Gateway: 192.168.1.161
+DNS Server: (optional) 8.8.8.8
+
+Available IP Range for PC3 LAN: 192.168.1.161 - 192.168.1.166
+Other devices can use: .163, .164, .165, .166
+
+PC4 (Connected to R4 LAN)
+--------------------------
+IP Address: 192.168.1.170
+Subnet Mask: 255.255.255.252
+Default Gateway: 192.168.1.169
+DNS Server: (optional) 8.8.8.8
+
+Available IP Range for PC4 LAN: 192.168.1.169 - 192.168.1.170
+Other devices can use: .170 (only one host IP available)
+
+=====================================
+How to Configure in Packet Tracer:
+=====================================
+
+1. Click on each PC
+2. Go to Desktop tab
+3. Click "IP Configuration"
+4. Select "Static" 
+5. Enter the IP Address, Subnet Mask, and Default Gateway
+6. Click anywhere to apply settings
+
+OR use Command Prompt:
+1. Click PC → Desktop → Command Prompt
+2. Type: ipconfig /ip [IP] [Subnet Mask] [Default Gateway]
+   Example for PC1: ipconfig /ip 192.168.1.2 255.255.255.128 192.168.1.1
+
+=====================================
+Test Connectivity from each PC:
+=====================================
+
+From PC1 Command Prompt:
+ping 192.168.1.1    (R1 gateway)
+ping 192.168.1.130  (PC2)
+ping 192.168.1.162  (PC3)
+ping 192.168.1.170  (PC4)
+
+From PC2 Command Prompt:
+ping 192.168.1.129  (R2 gateway)
+ping 192.168.1.2    (PC1)
+ping 192.168.1.162  (PC3)
+ping 192.168.1.170  (PC4)
+
+From PC3 Command Prompt:
+ping 192.168.1.161  (R3 gateway)
+ping 192.168.1.2    (PC1)
+ping 192.168.1.130  (PC2)
+ping 192.168.1.170  (PC4)
+
+From PC4 Command Prompt:
+ping 192.168.1.169  (R4 gateway)
+ping 192.168.1.2    (PC1)
+ping 192.168.1.130  (PC2)
+ping 192.168.1.162  (PC3)
